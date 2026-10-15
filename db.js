@@ -1,20 +1,26 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
+import fs from 'node:fs';
 
-// Muat variabel lingkungan dari .env
 dotenv.config();
 
-// Konfigurasi koneksi dari process.env
+let dockerConfig = {};
+const configPath = '/run/config/taskflow-config.json';
+
+if (fs.existsSync(configPath)) {
+  dockerConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+}
+
 const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '3306', 10),
-  user: process.env.DB_USER || 'root',
+  host: dockerConfig.host || process.env.DB_HOST || 'localhost',
+  port: Number(dockerConfig.port || process.env.DB_PORT || 3306),
+  user: dockerConfig.user || process.env.DB_USER || 'taskflow_user',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'taskflow_db',
+  database: dockerConfig.database || process.env.DB_NAME || 'taskflow_db',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  connectTimeout: 5000 // 5 detik timeout agar cepat memberi respons jika database mati
+  connectTimeout: 5000
 };
 
 // Buat pool koneksi mysql2

@@ -255,7 +255,7 @@ app.use((req, res) => {
 });
 
 // Jalankan Server
-app.listen(PORT, async () => {
+app.listen(PORT, "0.0.0.0", async () => {
   console.log(`🚀 TaskFlow Backend berjalan di http://localhost:${PORT}`);
   
   // Periksa koneksi awal ke database

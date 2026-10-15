@@ -1,0 +1,11 @@
+
+# Dependencies
+node_modules/
+
+# Secrets and local environment
+.env
+
+# Local Swarm configuration files
+taskflow-config.js
+taskflow-config.json
+docker-stack.yml
