@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TaskFlow - Aplikasi manajemen tugas sederhana, modern, minimalis, dan responsif untuk mengelola produktivitas Anda sehari-hari.">
+  <title>TaskFlow - Manajemen Tugas Modern</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234F46E5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 11l3 3L22 4'/><path d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'/></svg>">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Glow Accents -->
+  <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+
+  <div class="app-container">
+    <!-- Header Utama -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand-badge">
+          <svg class="brand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 11 12 14 22 4"></polyline>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+          <span class="brand-name">TaskFlow</span>
+        </div>
+        <p class="brand-tagline">Kelola target harian Anda dengan lebih terstruktur dan produktif.</p>
+      </div>
+
+      <div class="header-actions">
+        <button type="button" class="db-status-badge is-disconnected" id="dbStatusBadge" title="Klik untuk menguji ulang koneksi database">
+          <span class="db-status-dot"></span>
+          <span id="dbStatusText">Database Offline</span>
+        </button>
+
+        <div class="current-date-badge" id="currentDateBadge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span id="currentDateText">Memuat tanggal...</span>
+        </div>
+
+        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Ganti tema mode gelap atau terang" title="Ganti Tema">
+          <svg class="theme-icon icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Statistik Ringkasan -->
+    <section class="stats-grid" aria-label="Statistik Tugas">
+      <div class="stat-card stat-total">
+        <div class="stat-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Total Tugas</span>
+          <span class="stat-value" id="statTotal">0</span>
+        </div>
+      </div>
+
+      <div class="stat-card stat-pending">
+        <div class="stat-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Belum Selesai</span>
+          <span class="stat-value" id="statPending">0</span>
+        </div>
+      </div>
+
+      <div class="stat-card stat-completed">
+        <div class="stat-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Tugas Selesai</span>
+          <span class="stat-value" id="statCompleted">0</span>
+        </div>
+      </div>
+
+      <div class="stat-card stat-progress">
+        <div class="stat-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-progress-header">
+            <span class="stat-label">Tingkat Capaian</span>
+            <span class="stat-progress-percentage" id="statProgressPercent">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="statProgressBar" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Konten Utama: 2 Kolom (Form Tambah Tugas & List Tugas) -->
+    <main class="main-content-layout">
+      <!-- Kolom Kiri: Form Tambah Tugas -->
+      <aside class="sidebar-form-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <div class="icon-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <h2>Tambah Tugas Baru</h2>
+          </div>
+          <p class="card-subtitle">Buat catatan rencana tugas agar tidak terlewatkan.</p>
+        </div>
+
+        <form id="taskForm" class="task-form" novalidate>
+          <div class="form-group">
+            <label for="taskTitle" class="form-label">
+              Judul Tugas <span class="required-star">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="taskTitle" 
+              class="form-input" 
+              placeholder="Contoh: Menyusun laporan keuangan" 
+              maxlength="80" 
+              required
+              autocomplete="off"
+            >
+            <div class="form-meta">
+              <span class="input-error-msg" id="taskTitleError">Judul tugas tidak boleh kosong</span>
+              <span class="char-counter" id="titleCharCount">0/80</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="taskDescription" class="form-label">
+              Deskripsi Tugas <span class="optional-tag">(Opsional)</span>
+            </label>
+            <textarea 
+              id="taskDescription" 
+              class="form-textarea" 
+              rows="3" 
+              placeholder="Tambahkan rincian instruksi atau catatan penting..."
+              maxlength="250"
+            ></textarea>
+            <div class="form-meta">
+              <span></span>
+              <span class="char-counter" id="descCharCount">0/250</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Prioritas Tugas</label>
+            <div class="priority-selector" role="radiogroup" aria-label="Pilih Prioritas">
+              <label class="priority-option priority-low">
+                <input type="radio" name="priority" value="rendah" checked>
+                <span class="priority-custom-pill">
+                  <span class="priority-dot"></span> Rendah
+                </span>
+              </label>
+              <label class="priority-option priority-medium">
+                <input type="radio" name="priority" value="sedang">
+                <span class="priority-custom-pill">
+                  <span class="priority-dot"></span> Sedang
+                </span>
+              </label>
+              <label class="priority-option priority-high">
+                <input type="radio" name="priority" value="tinggi">
+                <span class="priority-custom-pill">
+                  <span class="priority-dot"></span> Tinggi
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block submit-btn" id="submitTaskBtn">
+            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Simpan Tugas</span>
+          </button>
+        </form>
+      </aside>
+
+      <!-- Kolom Kanan: Daftar Tugas & Kontrol Filter -->
+      <section class="task-list-section" aria-label="Daftar Tugas">
+        <!-- Panel Kontrol Pencarian, Filter & Sortir -->
+        <div class="controls-card">
+          <!-- Input Pencarian -->
+          <div class="search-box-wrapper">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              id="searchInput" 
+              class="search-input" 
+              placeholder="Cari tugas berdasarkan judul atau deskripsi..." 
+              autocomplete="off"
+            >
+            <button type="button" id="clearSearchBtn" class="clear-search-btn" title="Hapus pencarian" style="display: none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Baris Filter & Sortir -->
+          <div class="filter-sort-row">
+            <!-- Filter Tabs -->
+            <div class="filter-tabs" role="tablist" aria-label="Filter Status Tugas">
+              <button type="button" class="filter-tab active" data-filter="all" role="tab" aria-selected="true">
+                Semua <span class="tab-badge" id="badgeAll">0</span>
+              </button>
+              <button type="button" class="filter-tab" data-filter="pending" role="tab" aria-selected="false">
+                Belum Selesai <span class="tab-badge" id="badgePending">0</span>
+              </button>
+              <button type="button" class="filter-tab" data-filter="completed" role="tab" aria-selected="false">
+                Selesai <span class="tab-badge" id="badgeCompleted">0</span>
+              </button>
+            </div>
+
+            <!-- Opsi Sortir -->
+            <div class="sort-selector-wrapper">
+              <label for="sortSelect" class="sort-label">Urutkan:</label>
+              <select id="sortSelect" class="sort-select">
+                <option value="newest">Terbaru</option>
+                <option value="oldest">Terlama</option>
+                <option value="priority-desc">Prioritas (Tinggi - Rendah)</option>
+                <option value="title-asc">Judul (A - Z)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indikator Hasil Pencarian / Filter Aktif -->
+        <div class="active-status-bar" id="activeStatusBar" style="display: none;">
+          <span id="activeStatusText">Menampilkan hasil...</span>
+          <button type="button" class="reset-filter-link" id="resetFilterBtn">Reset Filter</button>
+        </div>
+
+        <!-- Wadah Kartu Tugas -->
+        <div class="tasks-container" id="tasksContainer" aria-live="polite">
+          <!-- Kartu tugas di-render secara dinamis via JavaScript -->
+        </div>
+
+        <!-- Tampilan Kosong (Empty State) -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <div class="empty-icon-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              <line x1="9" y1="14" x2="15" y2="14"></line>
+            </svg>
+          </div>
+          <h3 class="empty-title" id="emptyTitle">Belum Ada Tugas</h3>
+          <p class="empty-desc" id="emptyDesc">Gunakan formulir di samping untuk menambahkan tugas baru dan mulai mengatur produktivitas harian Anda.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>&copy; 2026 <strong>TaskFlow</strong>. Dibuat dengan cinta untuk efisiensi dan fokus harian Anda.</p>
+    </footer>
+  </div>
+
+  <!-- Modal Konfirmasi Hapus -->
+  <div class="modal-backdrop" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-icon-danger">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+      </div>
+      <h3 class="modal-title" id="deleteModalTitle">Hapus Tugas Ini?</h3>
+      <p class="modal-desc">
+        Tugas "<span class="modal-highlight-title" id="deleteTaskTitle"></span>" akan dihapus secara permanen dari daftar Anda.
+      </p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Batal</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edit Tugas -->
+  <div class="modal-backdrop" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle" style="display: none;">
+    <div class="modal-card modal-edit-card">
+      <div class="modal-header-row">
+        <div class="modal-title-with-icon">
+          <div class="modal-icon-edit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </div>
+          <h3 class="modal-title" id="editModalTitle">Edit Tugas</h3>
+        </div>
+        <button type="button" class="modal-close-btn" id="closeEditModalBtn" aria-label="Tutup modal edit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="editTaskForm" novalidate>
+        <input type="hidden" id="editTaskId">
+        
+        <div class="form-group">
+          <label for="editTaskTitle" class="form-label">
+            Judul Tugas <span class="required-star">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="editTaskTitle" 
+            class="form-input" 
+            maxlength="80" 
+            required
+            autocomplete="off"
+          >
+          <div class="form-meta">
+            <span class="input-error-msg" id="editTaskTitleError">Judul tugas tidak boleh kosong</span>
+            <span class="char-counter" id="editTitleCharCount">0/80</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editTaskDescription" class="form-label">
+            Deskripsi Tugas <span class="optional-tag">(Opsional)</span>
+          </label>
+          <textarea 
+            id="editTaskDescription" 
+            class="form-textarea" 
+            rows="3" 
+            maxlength="250"
+          ></textarea>
+          <div class="form-meta">
+            <span></span>
+            <span class="char-counter" id="editDescCharCount">0/250</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Prioritas Tugas</label>
+          <div class="priority-selector" role="radiogroup" aria-label="Edit Prioritas">
+            <label class="priority-option priority-low">
+              <input type="radio" name="editPriority" value="rendah">
+              <span class="priority-custom-pill">
+                <span class="priority-dot"></span> Rendah
+              </span>
+            </label>
+            <label class="priority-option priority-medium">
+              <input type="radio" name="editPriority" value="sedang">
+              <span class="priority-custom-pill">
+                <span class="priority-dot"></span> Sedang
+              </span>
+            </label>
+            <label class="priority-option priority-high">
+              <input type="radio" name="editPriority" value="tinggi">
+              <span class="priority-custom-pill">
+                <span class="priority-dot"></span> Tinggi
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-actions modal-edit-actions">
+          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Batal</button>
+          <button type="submit" class="btn btn-primary" id="saveEditBtn">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Wadah Notifikasi Toast -->
+  <div class="toast-container" id="toastContainer" aria-live="assertive" aria-atomic="true"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
